@@ -18,22 +18,17 @@ public:
         min = std::min(min, root->val);
         max = std::max(max, root->val);
         
-        int difference = std::abs(max - min);
-        
         if (!root->right)
         {
-            return std::max(difference, findMaxDiff(root->left, min, max));
+            return findMaxDiff(root->left, min, max);
         }
         
         if (!root->left)
         {
-            return std::max(difference, findMaxDiff(root->right, min, max));
+            return findMaxDiff(root->right, min, max);
         }
         
-        return std::max(
-            difference,
-            std::max(findMaxDiff(root->left, min, max), findMaxDiff(root->right, min, max))
-        );
+        return std::max(findMaxDiff(root->left, min, max), findMaxDiff(root->right, min, max));
     }
     
     int maxAncestorDiff(TreeNode* root) {
