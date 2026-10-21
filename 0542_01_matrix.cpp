@@ -1,13 +1,13 @@
 class Solution {
 public:
-    vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
+    vector<vector<int>> updateMatrix(vector<vector<int>>& mat)
+    {
         std::vector<std::pair<int, int>> directions{
             { 0, -1 }, { 0, 1 }, { -1, 0 }, { 1, 0}
         };
         int m = mat.size();
         int n = mat[0].size();
 
-        std::vector<std::vector<int>> answer(m, std::vector<int>(n, 0));
         std::queue<std::pair<int, int>> q;
 
         for (int row = 0; row < m; ++row)
@@ -17,42 +17,36 @@ public:
                 if (mat[row][column] == 0)
                 {
                     q.push({row, column});
-                    mat[row][column] = -1;
+                }
+                else
+                {
+                    mat[row][column] = INT_MAX;
                 }
             }
         }
 
-        int distance = 1;
         while (!q.empty())
         {
-            int qsize = q.size();
+            auto [row, column] = q.front();
+            q.pop();
 
-            for (int i = 0; i < qsize; ++i)
+            for (const auto& direction : directions)
             {
-                auto [row, column] = q.front();
-                q.pop();
-
-                for (const auto& direction : directions)
+                int nextRow = row + direction.first;
+                int nextColumn = column + direction.second;
+                if (nextRow >= 0
+                    && nextRow < m
+                    && nextColumn >= 0
+                    && nextColumn < n
+                    && mat[nextRow][nextColumn] == INT_MAX)
                 {
-                    int nextRow = row + direction.first;
-                    int nextColumn = column + direction.second;
-                    if (nextRow >= 0
-                        && nextRow < m
-                        && nextColumn >= 0
-                        && nextColumn < n
-                        && mat[nextRow][nextColumn] == 1)
-                    {
-                        q.push({nextRow, nextColumn});
-                        answer[nextRow][nextColumn] = distance;
-                        mat[nextRow][nextColumn] = -1;
-                    }
+                    q.push({nextRow, nextColumn});
+                    mat[nextRow][nextColumn] = mat[row][column] + 1;
                 }
             }
-
-            ++distance;
         }
 
-        return answer;
+        return mat;
     }
 };
 
